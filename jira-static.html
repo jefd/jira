@@ -1,0 +1,74 @@
+<html>
+    <head></head>
+      <body>
+        <form>
+
+          <p>
+            <label for="summary">Summary:</label> <br>
+            <input id="summary" type="text" name="summary" placeholder="Enter summary">   
+          </p>
+
+          <p>
+            <label for="description">Description:</label> <br>
+            <textarea id="description" rows="5" cols="60" name="description" placeholder="Enter description"></textarea>
+          </p>
+
+          <p>
+            <label for="files">Upload files:</label> <br>
+            <input id="files" type="file" name="files" multiple="multiple">
+          </p>
+
+          <p>
+            <label for="system">Select a system:</label> <br>
+            <select id="system" size="16" name="system" multiple="true">
+              <option value="10300">Active Directory</option>
+              <option value="10301">Analytics and Reporting Service</option>
+              <option value="10302">Billing Services</option>
+              <option value="10303">Cloud Storage Services</option>
+              <option value="10304">Data Center Services</option>
+              <option value="10305">Email and Collaboration Services</option>
+              <option value="10306">Financial Services</option>
+              <option value="10307">HR Services</option>
+              <option value="10308">Intranet</option>
+              <option value="10309">Jira</option>
+              <option value="10310">Office Network</option>
+              <option value="10311">Payroll Services</option>
+              <option value="10312">Printers</option>
+              <option value="10313">Public Website</option>
+              <option value="10314">VPN Server</option>
+              <option value="10315">Webstore Purchasing Services</option>
+            </select>
+          </p>
+
+          <p>
+            <label for="priority">How Urgent is this?</label> <br>
+            <select id="priority" name="priority">
+              <option value="10200">Blocker</option>
+              <option value="2">High</option>
+              <option value="3" selected="true">Medium</option>
+              <option value="4">Low</option>
+              <option value="10201">Minor</option>
+            </select>
+          </p>
+
+          <p>
+            <label for="impact">What is the impact?</label> <br>
+            <select id="impact" name="impact">
+              <option value="0">None</option>
+              <option value="10512">Extensive / Widespread</option>
+              <option value="10513">Significant / Large</option>
+              <option value="10514">Moderate / Limited</option>
+              <option value="10515">Minor / Localized</option>
+            </select>
+          </p>
+
+        </form>
+      </body>
+
+
+
+<!--
+
+https://stackoverflow.com/questions/26082721/how-to-display-selected-file-names-before-uploading-multiple-files-in-struts2
+
+-->
