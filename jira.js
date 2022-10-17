@@ -45,7 +45,8 @@ function Jira(initialVnode) {
         summary: '',
         description: '',
         fileElt: null,
-        fd: new FormData(),
+        //fd: new FormData(),
+        fileMap: {},
         system: null,
         priority: '3',
         impact: '0',
@@ -79,15 +80,10 @@ function Jira(initialVnode) {
 
     function fileCallback(e) {
         console.log('in file callback');
-        //console.log(model);
-        //model.fd = new FormData(); 
-        let len = model.fileElt.files.length;
-        for (let i = 0; i < len; i++) {
-            model.fd.append("attachment", model.fileElt.files[i]);
-        }
-        let vals = model.fd.values();
-        for (val of vals) {
-            console.log(val);
+
+        for (const file of model.fileElt.files) {
+            let key = `${file.size}-${file.lastModified}`;
+            model.fileMap[key] = file;
         }
     }
 
@@ -220,6 +216,40 @@ function Jira(initialVnode) {
         let fileLabel = m("label", {for: 'my-files'}, "Upload files:");
         let fileField = m('input', {onchange: fileCallback, oncreate: mkFileElt, id:'my-files', name: 'my-files', type: 'file', multiple: true})
 
+        /***********  file list UI ******************/
+        let lst = [];
+        //let files = model.fd.values();
+        let files = Object.values(model.fileMap);
+
+        function clearCallback2(e) {
+            e.preventDefault();
+            console.log('yyyyyyyyyyyyyyyyyyyy');
+            console.log(e.target.id);
+            console.log('yyyyyyyyyyyyyyyyyyyy');
+            delete model.fileMap[e.target.id];
+        }
+        
+        for(file of files)
+        {
+            //lst.push(m('a', {}, file.name));
+            let uid = `${file.size}-${file.lastModified}`;
+            lst.push(m('li', {}, m('a', {id: uid, href: '', onclick: clearCallback2}, file.name)));
+            console.log('zzzzzzzzzzzzzzzzzzzz');
+            console.log(file);
+            console.log('zzzzzzzzzzzzzzzzzzzz');
+        }
+
+        function clearCallback(e) {
+            e.preventDefault();
+            //model.fd = new FormData();
+            model.fileMap = {};
+        }
+
+        let filesView = m('ul', {}, [lst, lst.length != 0 ? m('a', {href: '', onclick: clearCallback}, 'Clear file list') : null]);
+
+        //console.log(model.fd.values());
+        /***********  file list UI ******************/
+
         let systemLabel = m("label", {for: 'system-select'}, "Select a system:");
         let systemSelect = selectView('system-select', SYSTEM, multi=true, systemCallback);
 
@@ -235,6 +265,7 @@ function Jira(initialVnode) {
                                          m('p', {}, [summaryLabel, m('br'), summaryField]), 
                                          m('p', {}, [descriptionLabel, m('br'), descriptionField]), 
                                          m('p', {}, [fileLabel, m('br'), fileField]), 
+                                         filesView,   
                                          m('p', {}, [systemLabel, m('br'), systemSelect]), 
                                          m('p', {}, [priorityLabel, m('br'), prioritySelect]),
                                          m('p', {}, [impactLabel, m('br'), impactSelect]),
