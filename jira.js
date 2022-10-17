@@ -107,11 +107,41 @@ function Jira(initialVnode) {
         model.loaded = false;
         model.error = "";
 
-        console.log(model);
+        //console.log(model);
 
-        if (!model.summary || !model.description)
+        if (!model.summary || !model.description) {
             model.error = 'Summary and description are both required fields';
             return
+        }
+
+        model.formData = new FormData();
+        model.formData.set('summary', model.summary);
+        model.formData.set('description', model.description);
+
+        if (model.system) {
+            for (item of model.system) {
+                model.formData.append('system', item);
+            }
+        }
+
+        model.formData.set('priority', model.priority);
+
+        if (model.impact !== '0')
+            model.formData.set('impact', model.impact);
+
+        let files = Object.values(model.fileMap);
+        for (file of files) {
+            model.formData.append('files', file);
+        }
+
+        console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
+        //console.log(model.formData.getAll('files'));
+        //console.log(model.formData);
+        for (const value of model.formData.values()) {
+            console.log(value);
+        }
+        console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
+
 
 
         //let url = getUrl();
