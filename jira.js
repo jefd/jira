@@ -3,7 +3,6 @@ const BASE_URL =  "https://rayv-webix4.jpl.nasa.gov/devel/ep";
 //const BASE_URL =  "";
 const API_PATH = "/wp-json/dash/v1";
 
-
 const SYSTEM = [
     {id: '10300', display: 'Active Directory'},
     {id: '10301', display: 'Analytics and Reporting Service'},
@@ -64,23 +63,18 @@ function Jira(initialVnode) {
     /******************** Update Functions *********************/
     function summaryCallback(e) {
         model.summary = e.target.value;
-        console.log(model)
     }
 
     function descriptionCallback(e) {
         model.description = e.target.value;
-        console.log(e.target.value)
     }
 
     function systemCallback(e) {
         model.system = [];
 
-        for (var i = 0; i < e.target.selectedOptions.length; i++) {
-            //console.log( e.target.selectedOptions[i].value);
+        for (let i = 0; i < e.target.selectedOptions.length; i++) {
             model.system.push(e.target.selectedOptions[i].value);
         }
-        
-        console.log(model);
     }
 
     function fileCallback(e) {
@@ -98,10 +92,11 @@ function Jira(initialVnode) {
     }
 
     function priorityCallback(e) {
-        console.log(e.target.value);
+        model.priority = e.target.value;
     }
 
     function impactCallback(e) {
+        model.impact = e.target.value;
     }
 
     function linkCallback(e) {
@@ -114,12 +109,19 @@ function Jira(initialVnode) {
     }
     
     function submitCallback(e) {
-        //e.preventDefault();
+        e.preventDefault();
         model.loaded = false;
         model.error = "";
 
-        let url = getUrl();
-        updateData(url);
+        console.log(model);
+
+        if (!model.summary || !model.description)
+            model.error = 'Summary and description are both required fields';
+            return
+
+
+        //let url = getUrl();
+        //updateData(url);
     }
 
     function getData(repos) {
@@ -246,6 +248,7 @@ function Jira(initialVnode) {
         return [
             link,
             model.showForm ? frm : null, 
+            model.error ? m('div', {style: {color: 'red'}}, model.error) : null,
         ];
 
 
