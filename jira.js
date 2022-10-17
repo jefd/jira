@@ -199,9 +199,41 @@ function Jira(initialVnode) {
         model.fileElt = vnode.dom;
     }
 
+    function fileListView(vnode) {
+        function clearCallback(e) {
+            e.preventDefault();
+            delete model.fileMap[e.target.id];
+        }
+
+        function clearAllCallback(e) {
+            e.preventDefault();
+            model.fileMap = {};
+        }
+
+        let lst = [];
+        let files = Object.values(model.fileMap);
+
+        
+        for(file of files)
+        {
+            let uid = `${file.size}-${file.lastModified}`;
+            lst.push(m('li', {}, m('a', {style: {'margin-right': '10px'}, id: uid, href: '', onclick: clearCallback}, '[X]'), m('a', {}, file.name)));
+        }
+
+
+        let filesView = m('ul', {}, [lst, lst.length != 0 ? 
+            m('a', {href: '', onclick: clearAllCallback}, 'Clear file list') : 
+            null]);
+        return filesView
+    }
+
     function view(vnode) {
         let summaryLabel = m("label", {for: 'summary'}, "Summary:");
-        let summaryField = m('input', {onchange: summaryCallback, id:'summary', name: 'summary', type: 'text', placeholder: 'Enter a summary'})
+        let summaryField = m('input', {onchange: summaryCallback, 
+                                       id:'summary', 
+                                       name: 'summary', 
+                                       type: 'text', 
+                                       placeholder: 'Enter a summary'})
 
         let descriptionLabel = m("label", {for: 'description'}, "Description:");
         let descriptionField = m('textarea', {onchange: descriptionCallback, 
@@ -212,35 +244,13 @@ function Jira(initialVnode) {
                                               placeholder: 'Enter description'})
 
         let fileLabel = m("label", {class: 'button' , for: 'my-files'}, "Upload files");
-        let fileField = m('input', {style: {opacity: '0'},onchange: fileCallback, oncreate: mkFileElt, id:'my-files', name: 'my-files', type: 'file', multiple: true})
-
-        /***********  file list UI ******************/
-        let lst = [];
-        //let files = model.fd.values();
-        let files = Object.values(model.fileMap);
-
-        function clearCallback2(e) {
-            e.preventDefault();
-            delete model.fileMap[e.target.id];
-        }
-        
-        for(file of files)
-        {
-            //lst.push(m('a', {}, file.name));
-            let uid = `${file.size}-${file.lastModified}`;
-            lst.push(m('li', {}, m('a', {style: {'margin-right': '10px'}, id: uid, href: '', onclick: clearCallback2}, '[X]'), m('a', {}, file.name)));
-        }
-
-        function clearCallback(e) {
-            e.preventDefault();
-            //model.fd = new FormData();
-            model.fileMap = {};
-        }
-
-        let filesView = m('ul', {}, [lst, lst.length != 0 ? m('a', {href: '', onclick: clearCallback}, 'Clear file list') : null]);
-
-        //console.log(model.fd.values());
-        /***********  file list UI ******************/
+        let fileField = m('input', {style: {opacity: '0'},
+                                    onchange: fileCallback, 
+                                    oncreate: mkFileElt, 
+                                    id:'my-files', 
+                                    name: 'my-files', 
+                                    type: 'file', 
+                                    multiple: true})
 
         let systemLabel = m("label", {for: 'system-select'}, "Select a system:");
         let systemSelect = selectView('system-select', SYSTEM, multi=true, systemCallback);
@@ -251,13 +261,13 @@ function Jira(initialVnode) {
         let impactLabel = m("label", {for: 'impact-select'}, "What is the impact?");
         let impactSelect = selectView('impact-select', IMPACT, multi=false, impactCallback);
 
-        let btn = m("button", {type: "button", onclick: submitCallback}, 'Submit');
+        let btn = m("button", {class: 'button', type: "button", onclick: submitCallback}, 'Submit');
 
         let frm = formView('jira-form', [
                                          m('p', {}, [summaryLabel, m('br'), summaryField]), 
                                          m('p', {}, [descriptionLabel, m('br'), descriptionField]), 
                                          m('p', {}, [fileLabel, m('br'), fileField]), 
-                                         filesView,   
+                                         fileListView(vnode),   
                                          m('p', {}, [systemLabel, m('br'), systemSelect]), 
                                          m('p', {}, [priorityLabel, m('br'), prioritySelect]),
                                          m('p', {}, [impactLabel, m('br'), impactSelect]),
