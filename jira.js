@@ -45,7 +45,7 @@ function Jira(initialVnode) {
         summary: '',
         description: '',
         fileElt: null,
-        //fd: new FormData(),
+        formData: null,
         fileMap: {},
         system: null,
         priority: '3',
@@ -79,8 +79,6 @@ function Jira(initialVnode) {
     }
 
     function fileCallback(e) {
-        console.log('in file callback');
-
         for (const file of model.fileElt.files) {
             let key = `${file.size}-${file.lastModified}`;
             model.fileMap[key] = file;
@@ -213,8 +211,8 @@ function Jira(initialVnode) {
                                               cols: '60', 
                                               placeholder: 'Enter description'})
 
-        let fileLabel = m("label", {for: 'my-files'}, "Upload files:");
-        let fileField = m('input', {onchange: fileCallback, oncreate: mkFileElt, id:'my-files', name: 'my-files', type: 'file', multiple: true})
+        let fileLabel = m("label", {class: 'button' , for: 'my-files'}, "Upload files");
+        let fileField = m('input', {style: {opacity: '0'},onchange: fileCallback, oncreate: mkFileElt, id:'my-files', name: 'my-files', type: 'file', multiple: true})
 
         /***********  file list UI ******************/
         let lst = [];
@@ -223,9 +221,6 @@ function Jira(initialVnode) {
 
         function clearCallback2(e) {
             e.preventDefault();
-            console.log('yyyyyyyyyyyyyyyyyyyy');
-            console.log(e.target.id);
-            console.log('yyyyyyyyyyyyyyyyyyyy');
             delete model.fileMap[e.target.id];
         }
         
@@ -233,10 +228,7 @@ function Jira(initialVnode) {
         {
             //lst.push(m('a', {}, file.name));
             let uid = `${file.size}-${file.lastModified}`;
-            lst.push(m('li', {}, m('a', {id: uid, href: '', onclick: clearCallback2}, file.name)));
-            console.log('zzzzzzzzzzzzzzzzzzzz');
-            console.log(file);
-            console.log('zzzzzzzzzzzzzzzzzzzz');
+            lst.push(m('li', {}, m('a', {style: {'margin-right': '10px'}, id: uid, href: '', onclick: clearCallback2}, '[X]'), m('a', {}, file.name)));
         }
 
         function clearCallback(e) {
