@@ -1,9 +1,7 @@
 import requests
 import json
 
-
-# jira personal access token for jef.dodson
-TOKEN = 'MDAzNzcxNDQwMzYxOgM14bEjncM6un808o/n39OKludK'
+from tk import *
 
 #url = 'http://localhost:8000'
 BASE = f'https://jira-epic.woc.noaa.gov'
@@ -105,11 +103,14 @@ def attach(issue_id, temp_ids):
 
 
 def main():
+    '''
     sd_request = create_request()
     issue_id = sd_request['issueId']
     content = upload()
     temp_ids = [item['temporaryAttachmentId'] for item in content['temporaryAttachments']] 
     attach(issue_id, temp_ids)
+    '''
+    print(TOKEN)
      
 
 if __name__ == '__main__':
