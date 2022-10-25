@@ -40,6 +40,8 @@ def create_request():
 
 def upload():
     upload_url = f'{BASE}/rest/servicedeskapi/servicedesk/1/attachTemporaryFile'
+    #upload_url = 'http://httpbin.org/anything'
+    #upload_url = f'http://localhost:8000'
     print(upload_url)
 
     headers = {'Accept': 'application/json',
@@ -58,6 +60,7 @@ def upload():
         ('file', ('a.html', open('a.html', 'rb'), 'text/html')),
         ('file', ('a.bin', open('a.bin', 'rb'), 'application/octet-stream')),
     ]
+            
 
     # r = requests.post(url, data=payload, files=files)
     r = requests.post(upload_url, headers=headers, files=multiple_files)
@@ -103,14 +106,11 @@ def attach(issue_id, temp_ids):
 
 
 def main():
-    '''
     sd_request = create_request()
     issue_id = sd_request['issueId']
     content = upload()
     temp_ids = [item['temporaryAttachmentId'] for item in content['temporaryAttachments']] 
     attach(issue_id, temp_ids)
-    '''
-    print(TOKEN)
      
 
 if __name__ == '__main__':
