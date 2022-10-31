@@ -26,7 +26,8 @@ function curl_setopt_custom_postfields($ch, $postfields, $headers = null) {
             foreach ( $value as $v ) {
                 $fields[] = array($key, $v);
             }
-        } else {
+        } 
+        else {
             $fields[] = array($key, $value);
         }
     }
@@ -42,7 +43,8 @@ function curl_setopt_custom_postfields($ch, $postfields, $headers = null) {
             $body[] = 'Content-Type: application/octet-stream';
             $body[] = '';
             $body[] = file_get_contents($filename);
-        } else {
+        } 
+        else {
             $body[] = '--' . $boundary;
             $body[] = 'Content-Disposition: form-data; name="' . $key . '"';
             $body[] = '';
@@ -90,6 +92,7 @@ curl_setopt($crl, CURLOPT_POST, true);
 
 $postfields = [
     'file' => array('@a.txt', '@a.html', '@a.bin'),
+    //'file' => [ ['@a.txt', 'text/plain'], ['@a.html', 'text/html'], ['@a.bin', 'application/octet-stream']];
     //'name' => array('James', 'Peter', 'Richard'),
 ];
 

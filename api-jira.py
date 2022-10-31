@@ -1,6 +1,11 @@
 import requests
+from requests.auth import HTTPBasicAuth
 from datetime import datetime
 import json
+
+from tk import *
+
+
 
 '''
 curl -H "Authorization: Bearer MDAzNzcxNDQwMzYxOgM14bEjncM6un808o/n39OKludK" -X GET -H "Content-Type: application/json" https://jira-epic.woc.noaa.gov/rest/api/2/issue/createmeta
@@ -9,9 +14,13 @@ curl -u "jef.dodson:wWI00ZRAHD0dWThEcGpd" -X GET -H "Content-Type: application/j
 
 '''
 
-
 # jira personal access token for jef.dodson
-TOKEN = 'MDAzNzcxNDQwMzYxOgM14bEjncM6un808o/n39OKludK'
+TOKEN = JIRA_TOKEN
+
+user = USERNAME
+password = PASSWORD
+
+auth = HTTPBasicAuth(user, password)
 
 HEADERS = {'Content-Type': 'application/json',
            'Authorization': f'Bearer {TOKEN}'
@@ -66,9 +75,15 @@ https://stackoverflow.com/questions/12989442/uploading-multiple-files-using-form
 
 
 def get():
+    user = USERNAME
+    password = PASSWORD
+    auth = HTTPBasicAuth(user, password)
+    headers = {'Content-Type': 'application/json',
+               'Accept': 'application/json',
+              }
     url = sd
     print(url)
-    r = requests.get(url, headers=HEADERS)
+    r = requests.get(url, headers=headers, auth=auth)
     #content = json.loads(r.content)
     print(r.status_code)
     print(r.content)
